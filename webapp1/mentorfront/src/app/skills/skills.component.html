@@ -1,0 +1,68 @@
+<div class="col-lg-10 mx-auto">
+    <div class="card ">
+  
+      <div class="row ml-3 mr-3 mt-3">
+  
+        <h4>Add Skills</h4>
+  
+  
+      </div>
+      <div class="row ml-3 mr-3 mt-3 mb-3 ">
+  
+      <h6>Multiple Skills can be added</h6>
+      </div>
+  
+      <form [formGroup]="signupForm" (submit)="addSkill(signupForm.value)">
+        <div class="md-20">
+  
+          <div class="row ml-2 mr-2 mb-3 ">
+            <div class="col-lg-4 col-md-6  ">
+              <div>
+                <label for="skill"><b>Select Skill</b></label>
+              </div>
+              <select id="skill" class="form-control" formControlName="skill">
+                    <option value disabled selected>Please select your Skill</option>
+                    <option *ngFor="let skill of skills" [value]="skill.name">{{skill.name}}</option>
+                </select>  
+                <div class="text-danger" *ngIf="skill.invalid && skill.errors.required && skill.touched">*This field is required</div>
+            </div>
+          </div>
+  
+          <div class="row ml-2 mr-2 mb-3 ">
+            <div class="col-lg-6 col-md-6 ">
+              <div>
+                <label for="selfRating"><b>Give Rating to Your Skill</b></label>
+              </div>
+              <input class="form-control" type="number" id="selfRating"
+                formControlName="selfRating" [formControl]="selfRating" placeholder="Enter Rating">
+                <div class="text-danger" *ngIf="selfRating.invalid && selfRating.errors.required && selfRating.touched">*This field is required</div>
+                <div class="text-danger" *ngIf="selfRating.errors?.max">Self Rating cannot be over 10.00</div>
+            </div>
+          </div>
+  
+  
+          <div class="row ml-2 mr-2 mb-3 ">
+            <div class="col-lg-6 col-md-6 ">
+                    <div>
+                       <label for="yearsOfExperience"><b>Years Of Experience</b></label>
+                     </div>
+                    <input class="form-control" type="number" id="yearsOfExperience"
+                    formControlName="yearsOfExperience" [formControl]="yearsOfExperience" placeholder="Enter Years Of Experience">
+                    <div class="text-danger" *ngIf="yearsOfExperience.invalid && yearsOfExperience.errors.required && yearsOfExperience.touched">*This field is required</div>
+  
+            </div>
+          </div>
+  
+  
+          <div class="row ml-2 mr-2 mb-3 pt-3 pb-3">
+            <div class="col-6 ">
+              <button type="submit" class="btn btn-color" [disabled]="!signupForm.valid">Add Skill</button>&nbsp; &nbsp; 
+              <input type="button" class="btn btn-color" value="SignUp!" routerLink="/login">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  

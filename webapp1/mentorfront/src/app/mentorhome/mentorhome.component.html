@@ -1,0 +1,28 @@
+<div class="container-fluid">
+<div class="card row pt-4 pl-4 pr-4">
+    <div class="card-header">
+        <h2 class="mx-auto my-2"> Pending Requests</h2>
+    </div>
+    <div class="card-body">
+        <div *ngIf="trainingList?.length == 0 ">
+            <div class="alert alert-danger"> No pending Requests</div>
+        </div>
+        <div class="row my-3">
+                <div class="col-sm-2"><b>Full Name</b></div>
+                <div class="col-sm-2"><b>Skill Name</b></div>
+                <div class="col-sm-2"><b>Starting Date</b></div>
+                <div class="col-sm-2"><b>Ending Date</b></div>
+                <div class="col-sm-4">&nbsp; &nbsp; &nbsp; <b>Action</b></div>
+               
+        </div>
+        <div *ngFor="let training of trainingList" class="row my-3">
+            <div class="col-sm-2">{{training.user.firstName}} {{training.user.lastName}}</div>
+            <div class="col-sm-2">{{training.skill.name}}</div>
+            <div class="col-sm-2">{{training.startDate}}</div>
+            <div class="col-sm-2">{{training.endDate}}</div>
+            <button class="btn btn-success col-sm-2" (click)="acceptRequest(training)">Accept</button>
+            <button class="btn btn-danger col-sm-2" (click)="declineRequest(training)">Decline</button>
+        </div>
+    </div>
+</div>
+</div>

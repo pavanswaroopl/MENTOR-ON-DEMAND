@@ -1,0 +1,85 @@
+<div class="container-fluid">
+    <div class="container">
+    <div class="row pt-4 ">
+        <div class="ml-10 mr-10 col-12">
+            <select [(ngModel)]="skillSearchKey" (ngModelChange)="searchBySkill()" class="form-control">
+    
+    <option value disabled selected>Please select your Skill</option>
+    <option *ngFor="let skill of skillList" [value]="skill.name">{{skill.name}}</option>
+    </select></div></div></div>
+    <div class="row mt-5">
+        <div class="alert alert-danger my-auto mx-auto" *ngIf="skillSearchKey == null">
+            You have not selected any technology
+        </div>
+        <div class="alert alert-danger my-auto mx-auto" *ngIf="mentorList?.length == 0">
+            Sorry, we do not have any mentors with knowledge in this technology at the moment
+        </div>
+        <div *ngIf="mentorList?.length != 0 && skillSearchKey != null" class="my-auto mx-auto col-9">
+
+            <div class="card-deck">
+                <div class="card" *ngFor="let mentorskill of mentorList">
+                    <div class="card-body">
+                        <h5 class="card-title">{{mentorskill.mentor.user.firstName}}
+                            {{mentorskill.mentor.user.lastName}}</h5>
+                        <p class="card-text">Self-Rating :{{mentorskill.selfRating}}</p>
+                        <button class="btn btn-color mx-auto col-4 mt-2" *ngIf="this.authService.loggedIn"
+                            (click)="moreDetails(mentorskill.id)">See more Details</button>
+                    </div>
+                    <div *ngIf="moreInfoMentorId == mentorskill.id">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Experience :{{mentorskill.yearsOfExperience}}</li>
+                            <li class="list-group-item">Time-Slots available {{mentorskill.mentor.timeslot}}</li>
+                            <li class="list-group-item">Experience as a mentor {{mentorskill.mentor.yearsOfExperience}}
+                            </li>
+                            <li class="list-group-item">Contact Number : {{mentorskill.mentor.user.contactNumber}}</li>
+                            <li class="list-group-item">Email Id : {{mentorskill.mentor.user.userName}}</li>
+                            <li class="list-group-item">LinkedIn URL : <a [href]="mentorskill.mentor.linkedinURL"
+                                    target="_blank">{{mentorskill.mentor.linkedinUrl}}</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body" *ngIf="this.authService.role!=null">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-color col-4 mt-2 form-control"
+                                    (click)="requestTraining(mentorskill.id)">Request Training</button></div>
+                        </div>
+                        <form class="col-12" [formGroup]="requestTrainingForm"
+                            (submit)="this.submitRequestTraining(requestTrainingForm.value,mentorskill)"
+                            *ngIf="requestTrainingMentorId == mentorskill.id">
+                            <div *ngIf="this.errorMessage!=null" class="alert-warning">
+                                {{this.errorMessage}}
+                            </div>
+                            <label for="startDate" class="mt-2">Start Date</label>
+                            <input id="startDate" formControlName="startDate" type="date"
+                                placeholder="Select Start Date" class="form-control">
+                            <div class="text-warning"
+                                *ngIf="startDate.touched && startDate.invalid && startDate.errors.required">Start Date
+                                is required</div>
+                            <div class="text-warning" *ngIf="requestTrainingForm.get('startDate').hasError('nomatch')">
+                                Start Date cannot be before Today</div>
+                            <div class="text-warning" *ngIf="requestTrainingForm.get('startDate').hasError('nomatch1')">
+                                Start Date cannot be after End Date</div>
+                            <label for="endDate" class="mt-2">End Date</label>
+                            <input id="endDate" formControlName="endDate" type="date" placeholder="Select End Date"
+                                class="form-control">
+                            <div class="text-warning"
+                                *ngIf="endDate.touched && endDate.invalid && endDate.errors.required">End Date is
+                                required</div>
+                            <div class="text-warning" *ngIf="requestTrainingForm.get('endDate').hasError('nomatch')">End
+                                Date cannot be before Today</div>
+                            <div class="text-warning" *ngIf="requestTrainingForm.get('endDate').hasError('nomatch1')">
+                                End Date cannot be before Start Date</div>
+                            <div class="card-body" *ngIf="this.authService.role!=null">
+                                <div class="row">
+                                    <button class="btn btn-success form-control " type="submit"
+                                        [disabled]="!requestTrainingForm.valid">Send Request</button></div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,74 @@
+version: '3'
+services:
+  mentor-mysql:
+    image: mysql:8.0.18
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - d:/mentordb:/var/lib/mentor_on_demand
+      - ./dbscripts:/docker-entrypoint-initdb.d
+
+  eureka-discovery-service:
+    image: eureka-discovery-app
+    build: MicroServices/eureka-discovery-service/.
+    ports:
+      - 8044:8044
+
+  searchservice:
+    image: searchservice-app
+    build: MicroServices/searchservice/.
+    ports:
+      - 7777:7777
+    depends_on:
+      - mentor-mysql
+      - eureka-discovery-service
+    links:
+      - mentor-mysql
+      - eureka-discovery-service
+
+
+  trainingservice:
+    image: trainingservice-app
+    build: MicroServices/trainingservice/.
+    ports:
+      - 7347:7347
+    depends_on:
+      - mentor-mysql
+      - eureka-discovery-server
+    links:
+      - mentor-mysql
+      - eureka-discovery-server
+
+  authservice:
+    image: authservice-app
+    build: MicroServices/authservice/.
+    ports:
+      - 8085:8085
+    depends_on:
+      - mentor-mysql
+      - eureka-discovery-service
+    links:
+      - mentor-mysql
+      - eureka-discovery-service
+
+
+  zuul-gateway:
+    image: zuul-gateway-app
+    build: MicroServices/zuul-gateway/.
+    ports:
+      - 8083:8083
+    depends_on:
+      - payroll-mysql
+      - eureka-discovery-service
+     
+    links:
+      - payroll-mysql
+      - eureka-discovery-service
+
+  mentorfront:
+    image: mentorfront-app
+    build: webapp1/mentorfront/.
+    ports:
+      - 4200:80
